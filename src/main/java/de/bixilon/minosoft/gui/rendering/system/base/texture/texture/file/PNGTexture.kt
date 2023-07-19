@@ -17,6 +17,7 @@ import de.bixilon.kotlinglm.vec2.Vec2i
 import de.bixilon.minosoft.assets.AssetsManager
 import de.bixilon.minosoft.data.registries.identified.ResourceLocation
 import de.bixilon.minosoft.gui.rendering.RenderConstants
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureStates
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureTransparencies
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.TextureArrayProperties
@@ -34,6 +35,7 @@ import java.io.FileNotFoundException
 class PNGTexture(
     override val resourceLocation: ResourceLocation,
     override var mipmaps: Boolean = true,
+    val format: TextureFormats = TextureFormats.RGBA8,
 ) : FileTexture {
     override lateinit var renderData: TextureRenderData
 
@@ -57,17 +59,17 @@ class PNGTexture(
         }
 
         var data = try {
-            assetsManager[resourceLocation].readTexture()
+            assetsManager[resourceLocation].readTexture(format)
         } catch (error: Throwable) {
             state = TextureStates.ERRORED
             Log.log(LogMessageType.RENDERING, LogLevels.WARN) { "Can not load texture $resourceLocation: $error" }
             if (error !is FileNotFoundException) {
                 Log.log(LogMessageType.RENDERING, LogLevels.VERBOSE) { error }
             }
-            assetsManager[RenderConstants.DEBUG_TEXTURE_RESOURCE_LOCATION].readTexture()
+            assetsManager[RenderConstants.DEBUG_TEXTURE_RESOURCE_LOCATION].readTexture(format)
         }
         data.buffer.rewind()
-        if (mipmaps) data = MipmapTextureData(data.size, data.buffer)
+        if (mipmaps) data = MipmapTextureData(data.size, format, data.buffer)
 
         this.size = data.size
         transparency = TextureTransparencies.OPAQUE

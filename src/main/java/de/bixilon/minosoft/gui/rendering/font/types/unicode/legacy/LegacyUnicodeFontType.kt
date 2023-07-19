@@ -26,6 +26,7 @@ import de.bixilon.minosoft.gui.rendering.font.renderer.properties.FontProperties
 import de.bixilon.minosoft.gui.rendering.font.types.PostInitFontType
 import de.bixilon.minosoft.gui.rendering.font.types.factory.FontTypeFactory
 import de.bixilon.minosoft.gui.rendering.font.types.unicode.UnicodeCodeRenderer
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.StaticTextureArray
 import de.bixilon.minosoft.gui.rendering.system.base.texture.texture.Texture
 import de.bixilon.minosoft.gui.rendering.textures.TextureUtil.texture
@@ -84,7 +85,7 @@ class LegacyUnicodeFontType(
                 sizes.skip(PAGE_SIZE.toLong())
                 return
             }
-            val texture = textures.createTexture(textureFile, mipmaps = false, properties = false)
+            val texture = textures.createTexture(textureFile, mipmaps = false, format = TextureFormats.RGBA2, properties = false)
 
             loadPage(pageId, texture, chars, sizes)
         }

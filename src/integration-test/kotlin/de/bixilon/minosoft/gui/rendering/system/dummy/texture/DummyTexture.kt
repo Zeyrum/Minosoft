@@ -16,6 +16,7 @@ package de.bixilon.minosoft.gui.rendering.system.dummy.texture
 import de.bixilon.kotlinglm.vec2.Vec2
 import de.bixilon.kotlinglm.vec2.Vec2i
 import de.bixilon.minosoft.gui.rendering.RenderContext
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureStates
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureTransparencies
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.TextureArrayProperties
@@ -36,6 +37,6 @@ class DummyTexture : Texture {
     override var mipmaps: Boolean = false
 
     override fun load(context: RenderContext) {
-        data = TextureData(size, TextureGenerator.allocate(size))
+        data = TextureData(size, TextureFormats.RGBA8, TextureGenerator.allocate(size, TextureFormats.RGBA8))
     }
 }

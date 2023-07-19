@@ -60,7 +60,7 @@ open class ButtonElement(
 
     init {
         padding = Vec4(4.0f)
-        updateSize()
+        tryUpdate()
     }
 
     protected fun updateSize() {

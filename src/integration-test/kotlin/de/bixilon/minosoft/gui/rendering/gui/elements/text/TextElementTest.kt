@@ -23,6 +23,7 @@ import de.bixilon.minosoft.gui.rendering.gui.test.GuiRenderTestUtil.assetSize
 import de.bixilon.minosoft.gui.rendering.gui.test.GuiTestConsumer
 import de.bixilon.minosoft.gui.rendering.util.vec.vec4.Vec4Util.marginOf
 import org.testng.Assert.assertEquals
+import org.testng.Assert.assertFalse
 import org.testng.annotations.Test
 
 @Test(groups = ["font", "gui"])
@@ -31,6 +32,11 @@ class TextElementTest {
     fun `size empty`() {
         val element = TextElement(GuiRenderTestUtil.create(), "")
         element.assetSize(Vec2(0, 0))
+    }
+
+    fun `initial clean`() {
+        val element = TextElement(GuiRenderTestUtil.create(), "")
+        assertFalse(element.update)
     }
 
     fun `size of single char`() {

@@ -59,11 +59,11 @@ class SpriteTexture(private val original: Texture) : Texture {
         val bytesPerTexture = size.x * size.y * PNGDecoder.Format.RGBA.numComponents
 
         for (i in 0 until animationProperties.frameCount) {
-            val buffer = TextureGenerator.allocate(size)
+            val buffer = TextureGenerator.allocate(size, data.format)
             buffer.copyFrom(original, bytesPerTexture * i, 0, bytesPerTexture)
             buffer.flip()
 
-            val splitTexture = MemoryTexture(size, mipmaps = true, buffer = buffer)
+            val splitTexture = MemoryTexture(size, mipmaps = true, format = data.format, buffer = buffer)
 
             splitTextures += splitTexture
         }

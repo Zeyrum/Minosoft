@@ -15,12 +15,15 @@ package de.bixilon.minosoft.gui.rendering.textures
 
 import de.bixilon.kotlinglm.vec2.Vec2i
 import de.bixilon.minosoft.data.registries.identified.ResourceLocation
+import de.bixilon.minosoft.data.text.formatting.color.ColorUtil
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureTransparencies
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.StaticTextureArray
 import de.bixilon.minosoft.gui.rendering.system.base.texture.data.TextureData
 import de.bixilon.minosoft.gui.rendering.system.base.texture.texture.Texture
 import de.bixilon.minosoft.gui.rendering.world.mesh.SingleWorldMesh
 import de.bixilon.minosoft.gui.rendering.world.mesh.WorldMesh
+import de.bixilon.minosoft.util.KUtil.getRGBA
 import de.bixilon.minosoft.util.KUtil.toResourceLocation
 import de.matthiasmann.twl.utils.PNGDecoder
 import org.lwjgl.BufferUtils
@@ -29,6 +32,7 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.InputStream
+import java.nio.ByteBuffer
 import javax.imageio.ImageIO
 
 object TextureUtil {
@@ -91,7 +95,7 @@ object TextureUtil {
      * Only happens to some weird textures (seen in PureBDCraft)
      * Ignores the alpha channel
      */
-    private fun InputStream.readTexture2(): TextureData {
+    private fun InputStream.readTexture2(format: TextureFormats): TextureData {
         val image: BufferedImage = ImageIO.read(this)
         val rgb = image.getRGB(0, 0, image.width, image.height, null, 0, image.width)
 
@@ -99,25 +103,46 @@ object TextureUtil {
         val dataOutput = DataOutputStream(byteOutput)
 
         for (color in rgb) {
-            dataOutput.writeInt((color shl 8) or 0xFF)
+            val rgba = (color shl 8) or 0xFF
+            when (format) {
+                TextureFormats.RGBA8 -> dataOutput.writeInt(rgba)
+                TextureFormats.RGBA2 -> dataOutput.writeByte(ColorUtil.rgba8ToRgba2(rgba).toInt())
+            }
         }
 
         val buffer = MemoryUtil.memAlloc(byteOutput.size())
         buffer.put(byteOutput.toByteArray())
 
-        return TextureData(Vec2i(image.width, image.height), buffer)
+        return TextureData(Vec2i(image.width, image.height), format, buffer)
     }
 
-    fun InputStream.readTexture(): TextureData {
-        return try {
+    fun InputStream.readTexture(format: TextureFormats): TextureData {
+        try {
             val decoder = PNGDecoder(this)
             val data = BufferUtils.createByteBuffer(decoder.width * decoder.height * PNGDecoder.Format.RGBA.numComponents)
             decoder.decode(data, decoder.width * PNGDecoder.Format.RGBA.numComponents, PNGDecoder.Format.RGBA)
 
-            TextureData(Vec2i(decoder.width, decoder.height), data)
-        } catch (exception: Throwable) {
-            this.reset()
-            readTexture2()
+
+            val converted = when (format) {
+                TextureFormats.RGBA8 -> data
+                TextureFormats.RGBA2 -> data.copyRgba8ToRgba2()
+            }
+            return TextureData(Vec2i(decoder.width, decoder.height), format, converted)
+        } catch (_: Throwable) {
         }
+        this.reset()
+        return readTexture2(format)
+    }
+
+
+    private fun ByteBuffer.copyRgba8ToRgba2(): ByteBuffer {
+        val next = BufferUtils.createByteBuffer(this.limit() / 4)
+
+        for (index in 0..next.limit()) {
+            val rgba = this.getRGBA(index)
+            next.put(index, ColorUtil.rgba8ToRgba2(rgba))
+        }
+
+        return next
     }
 }

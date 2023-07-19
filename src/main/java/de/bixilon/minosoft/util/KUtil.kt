@@ -60,6 +60,7 @@ import de.bixilon.minosoft.util.url.ResourceURLHandler
 import io.netty.channel.SimpleChannelInboundHandler
 import javafx.application.Platform
 import org.kamranzafar.jtar.TarHeader
+import java.nio.ByteBuffer
 import java.security.SecureRandom
 import java.util.*
 import javax.net.ssl.SSLContext
@@ -351,5 +352,17 @@ object KUtil {
     @JvmStatic
     inline fun <reified T : Enum<T>> ValuesEnum<T>.set(): EnumSet<T> {
         return EnumSetUtil.create(T::class.java, VALUES)
+    }
+
+    fun ByteBuffer.getRGB(index: Int): Int {
+        val red: Int = this[index].toInt() and 0xFF
+        val green: Int = this[index + 1].toInt() and 0xFF
+        val blue: Int = this[index + 2].toInt() and 0xFF
+
+        return 0xFF shl 24 or (red shl 16) or (green shl 8) or blue
+    }
+
+    fun ByteBuffer.getRGBA(index: Int): Int {
+        return (getRGB(index) shl 8) or (this[index + 3].toInt() and 0x0FF)
     }
 }

@@ -96,7 +96,7 @@ class OpenGLDynamicTextureArray(
                 Log.log(LogMessageType.ASSETS, LogLevels.WARN) { "Dynamic texture $texture, has not a size of ${resolution}x${resolution}!" }
             }
 
-            val mipmaps = OpenGLTextureUtil.generateMipMaps(data.buffer, data.size)
+            val mipmaps = OpenGLTextureUtil.generateMipMaps(data.buffer, data.format, data.size)
             texture.data = mipmaps
             texture.size = data.size
             if (force) {

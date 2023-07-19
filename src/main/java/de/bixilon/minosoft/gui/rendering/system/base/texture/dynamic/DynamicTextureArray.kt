@@ -1,6 +1,6 @@
 /*
  * Minosoft
- * Copyright (C) 2020-2022 Moritz Zwerger
+ * Copyright (C) 2020-2023 Moritz Zwerger
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -13,6 +13,7 @@
 
 package de.bixilon.minosoft.gui.rendering.system.base.texture.dynamic
 
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.TextureArray
 import de.bixilon.minosoft.gui.rendering.system.base.texture.data.TextureData
 import de.bixilon.minosoft.gui.rendering.textures.TextureUtil.readTexture
@@ -25,6 +26,6 @@ interface DynamicTextureArray : TextureArray {
     fun pushBuffer(identifier: UUID, force: Boolean = false, data: () -> TextureData): DynamicTexture
 
     fun pushRawArray(identifier: UUID, force: Boolean = false, data: () -> ByteArray): DynamicTexture {
-        return pushBuffer(identifier, force) { ByteArrayInputStream(data()).readTexture() }
+        return pushBuffer(identifier, force) { ByteArrayInputStream(data()).readTexture(TextureFormats.RGBA8) }
     }
 }

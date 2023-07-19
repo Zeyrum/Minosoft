@@ -16,6 +16,7 @@ package de.bixilon.minosoft.gui.rendering.system.base.texture.texture
 import de.bixilon.kotlinglm.vec2.Vec2
 import de.bixilon.kotlinglm.vec2.Vec2i
 import de.bixilon.minosoft.gui.rendering.RenderContext
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureStates
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureTransparencies
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.TextureArrayProperties
@@ -52,7 +53,7 @@ interface Texture : ShaderTexture {
         return renderData.transformUV(end)
     }
 
-    fun createData(mipmaps: Boolean = this.mipmaps, size: Vec2i, buffer: ByteBuffer): TextureData {
-        return if (mipmaps) MipmapTextureData(size, buffer) else TextureData(size, buffer)
+    fun createData(mipmaps: Boolean = this.mipmaps, size: Vec2i, format: TextureFormats, buffer: ByteBuffer): TextureData {
+        return if (mipmaps) MipmapTextureData(size, format, buffer) else TextureData(size, format, buffer)
     }
 }

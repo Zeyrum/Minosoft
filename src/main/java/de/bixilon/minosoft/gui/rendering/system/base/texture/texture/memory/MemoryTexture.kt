@@ -15,6 +15,7 @@ package de.bixilon.minosoft.gui.rendering.system.base.texture.texture.memory
 
 import de.bixilon.kotlinglm.vec2.Vec2i
 import de.bixilon.minosoft.gui.rendering.RenderContext
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureStates
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureTransparencies
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.TextureArrayProperties
@@ -28,16 +29,17 @@ class MemoryTexture(
     override val size: Vec2i,
     override var properties: ImageProperties = ImageProperties(),
     override var mipmaps: Boolean = true,
+    format: TextureFormats,
     buffer: ByteBuffer,
 ) : Texture {
     override lateinit var array: TextureArrayProperties
     override lateinit var renderData: TextureRenderData
     override var transparency: TextureTransparencies = TextureTransparencies.OPAQUE
         private set
-    override var data: TextureData = createData(mipmaps, size, buffer)
+    override var data: TextureData = createData(mipmaps, size, format, buffer)
 
     init {
-        if (buffer.limit() != TextureGenerator.getBufferSize(size)) throw IllegalArgumentException("Invalid buffer size: ${buffer.limit()}")
+        if (buffer.limit() != TextureGenerator.getBufferSize(size, format)) throw IllegalArgumentException("Invalid buffer size: ${buffer.limit()}")
     }
 
     override val state: TextureStates = TextureStates.LOADED

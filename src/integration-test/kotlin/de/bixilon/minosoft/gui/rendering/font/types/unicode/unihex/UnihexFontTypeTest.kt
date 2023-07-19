@@ -78,9 +78,7 @@ class UnihexFontTypeTest {
     }
 
     private fun ByteArray.assertPixel(index: Int, set: Boolean = true) {
-        val offset = index * 4
-
-        val value = this[offset + 0].toInt() or this[offset + 1].toInt() or this[offset + 2].toInt() or this[offset + 3].toInt()
+        val value = this[index + 0].toInt()
 
         if (set) {
             assertTrue(value != 0, "Did expect pixel at $index")

@@ -18,6 +18,7 @@ import de.bixilon.kutil.latch.AbstractLatch
 import de.bixilon.minosoft.data.registries.identified.ResourceLocation
 import de.bixilon.minosoft.gui.rendering.system.base.RenderSystem
 import de.bixilon.minosoft.gui.rendering.system.base.shader.NativeShader
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureStates
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.StaticTextureArray
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.TextureArrayStates
@@ -35,7 +36,7 @@ class DummyStaticTextureArray(renderSystem: RenderSystem) : StaticTextureArray {
         TODO("Not yet implemented")
     }
 
-    override fun createTexture(resourceLocation: ResourceLocation, mipmaps: Boolean, properties: Boolean, default: (mipmaps: Boolean) -> Texture): Texture {
+    override fun createTexture(resourceLocation: ResourceLocation, mipmaps: Boolean, format: TextureFormats, properties: Boolean, default: (mipmaps: Boolean) -> Texture): Texture {
         return textures.getOrPut(resourceLocation) { DummyTexture() }
     }
 

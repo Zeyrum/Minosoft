@@ -16,6 +16,7 @@ package de.bixilon.minosoft.gui.rendering.font.types.bitmap
 import de.bixilon.kotlinglm.vec2.Vec2
 import de.bixilon.kotlinglm.vec2.Vec2i
 import de.bixilon.minosoft.gui.rendering.font.types.empty.EmptyCodeRenderer
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.data.TextureData
 import de.bixilon.minosoft.gui.rendering.system.base.texture.texture.Texture
 import de.bixilon.minosoft.gui.rendering.system.dummy.texture.DummyTexture
@@ -35,7 +36,7 @@ class BitmapFontTypeTest {
         val rows = (start.size / 16) + if (start.size % 16 == 0) 0 else 1
         val size = Vec2i(width * 16, rows * height)
 
-        val buffer = ByteBuffer.allocate(size.x * size.y * 4)
+        val buffer = ByteBuffer.allocate(size.x * size.y)
 
         for (row in 0 until rows) {
             for (height in 0 until height) {
@@ -44,10 +45,6 @@ class BitmapFontTypeTest {
                     val end = end.getOrNull((row * 16) + char) ?: width
 
                     for (pixel in 0 until width) {
-                        buffer.put(0xFF.toByte())
-                        buffer.put(0xFF.toByte())
-                        buffer.put(0xFF.toByte())
-
                         if (pixel in start..end) {
                             buffer.put(0xFF.toByte())
                         } else {
@@ -61,7 +58,7 @@ class BitmapFontTypeTest {
 
         val texture = DummyTexture()
         texture.size = size
-        texture.data = TextureData(size, buffer)
+        texture.data = TextureData(size, TextureFormats.RGBA2, buffer)
 
         return texture
     }

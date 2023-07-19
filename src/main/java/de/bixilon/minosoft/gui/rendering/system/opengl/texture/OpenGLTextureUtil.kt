@@ -1,6 +1,6 @@
 /*
  * Minosoft
- * Copyright (C) 2020-2022 Moritz Zwerger
+ * Copyright (C) 2020-2023 Moritz Zwerger
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -14,6 +14,7 @@
 package de.bixilon.minosoft.gui.rendering.system.opengl.texture
 
 import de.bixilon.kotlinglm.vec2.Vec2i
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import example.jonathan2520.SRGBAverager
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11.*
@@ -38,7 +39,8 @@ object OpenGLTextureUtil {
         return textureId
     }
 
-    fun generateMipMaps(data: ByteBuffer, size: Vec2i): Array<ByteBuffer> {
+    fun generateMipMaps(data: ByteBuffer, format: TextureFormats, size: Vec2i): Array<ByteBuffer> {
+        if (format != TextureFormats.RGBA8) TODO("Mipmap only supports rgba8 atm.")
         val images: MutableList<ByteBuffer> = mutableListOf()
 
         images += data
@@ -93,4 +95,11 @@ object OpenGLTextureUtil {
         buffer.position(0)
         return buffer
     }
+
+
+    val TextureFormats.gl: Int
+        get() = when (this) {
+            TextureFormats.RGBA8 -> GL_RGBA8
+            TextureFormats.RGBA2 -> GL_RGBA2
+        }
 }

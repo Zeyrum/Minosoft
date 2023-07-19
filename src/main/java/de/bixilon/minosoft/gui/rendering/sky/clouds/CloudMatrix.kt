@@ -16,6 +16,7 @@ package de.bixilon.minosoft.gui.rendering.sky.clouds
 import de.bixilon.minosoft.assets.AssetsManager
 import de.bixilon.minosoft.config.DebugOptions
 import de.bixilon.minosoft.data.registries.identified.Namespaces.minecraft
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.textures.TextureUtil.readTexture
 import de.bixilon.minosoft.gui.rendering.textures.TextureUtil.texture
 import java.util.*
@@ -25,7 +26,7 @@ class CloudMatrix {
 
 
     fun load(assetsManager: AssetsManager) {
-        val data = assetsManager[CLOUD_MATRIX].readTexture()
+        val data = assetsManager[CLOUD_MATRIX].readTexture(TextureFormats.RGBA2) // TODO: luminance
 
         if (data.size.x != CLOUD_MATRIX_SIZE || data.size.y != CLOUD_MATRIX_SIZE) {
             throw IllegalStateException("Cloud matrix has invalid size: ${data.size}")
@@ -35,7 +36,7 @@ class CloudMatrix {
             if (DebugOptions.CLOUD_RASTER) {
                 matrix[i] = if ((i / CLOUD_MATRIX_SIZE) % 2 == 0) (i + 1) % 2 == 0 else (i % 2) == 0
             } else {
-                matrix[i] = data.buffer.getInt(i * 4) ushr 24 == 0xFF
+                matrix[i] = data.buffer.getInt(i) != 0x00
             }
         }
 

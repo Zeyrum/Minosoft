@@ -17,10 +17,17 @@ import de.bixilon.kotlinglm.vec2.Vec2
 import de.bixilon.minosoft.gui.rendering.gui.test.GuiRenderTestUtil
 import de.bixilon.minosoft.gui.rendering.gui.test.GuiTestConsumer
 import org.testng.Assert.assertEquals
+import org.testng.Assert.assertFalse
 import org.testng.annotations.Test
 
 @Test(groups = ["gui"])
 class ButtonElementTest {
+
+    fun `initial clean`() {
+        val button = ButtonElement(GuiRenderTestUtil.create(), "bc") { }
+        assertFalse(button.update)
+    }
+
 
     fun `basic verification`() {
         var invoked = 0

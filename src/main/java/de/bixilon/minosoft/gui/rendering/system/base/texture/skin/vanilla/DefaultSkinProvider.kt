@@ -18,6 +18,7 @@ import de.bixilon.minosoft.assets.AssetsManager
 import de.bixilon.minosoft.data.entities.entities.player.PlayerEntity
 import de.bixilon.minosoft.data.entities.entities.player.properties.textures.metadata.SkinModel
 import de.bixilon.minosoft.data.registries.identified.ResourceLocation
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.dynamic.DynamicTexture
 import de.bixilon.minosoft.gui.rendering.system.base.texture.dynamic.DynamicTextureArray
 import de.bixilon.minosoft.gui.rendering.system.base.texture.skin.PlayerSkin
@@ -65,7 +66,7 @@ class DefaultSkinProvider(
     }
 
     private fun load(path: ResourceLocation): DynamicTexture? {
-        val data = assets.getOrNull(path)?.readTexture() ?: return null
+        val data = assets.getOrNull(path)?.readTexture(TextureFormats.RGBA8) ?: return null
         val texture = array.pushBuffer(UUID(0L, defaultId++.toLong()), true) { data }
         texture.usages.incrementAndGet()
         return texture

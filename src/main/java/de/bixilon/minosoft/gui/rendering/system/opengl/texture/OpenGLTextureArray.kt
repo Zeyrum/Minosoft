@@ -24,6 +24,7 @@ import de.bixilon.minosoft.assets.util.InputStreamUtil.readAsString
 import de.bixilon.minosoft.data.registries.identified.ResourceLocation
 import de.bixilon.minosoft.gui.rendering.RenderContext
 import de.bixilon.minosoft.gui.rendering.system.base.shader.NativeShader
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureStates
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.StaticTextureArray
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.TextureArrayProperties
@@ -32,6 +33,7 @@ import de.bixilon.minosoft.gui.rendering.system.base.texture.data.TextureData
 import de.bixilon.minosoft.gui.rendering.system.base.texture.sprite.SpriteAnimator
 import de.bixilon.minosoft.gui.rendering.system.base.texture.sprite.SpriteTexture
 import de.bixilon.minosoft.gui.rendering.system.base.texture.texture.Texture
+import de.bixilon.minosoft.gui.rendering.system.opengl.texture.OpenGLTextureUtil.gl
 import de.bixilon.minosoft.gui.rendering.textures.TextureAnimation
 import de.bixilon.minosoft.gui.rendering.textures.properties.ImageProperties
 import de.bixilon.minosoft.util.KUtil.toResourceLocation
@@ -73,7 +75,7 @@ class OpenGLTextureArray(
     }
 
     @Synchronized
-    override fun createTexture(resourceLocation: ResourceLocation, mipmaps: Boolean, properties: Boolean, default: (mipmaps: Boolean) -> Texture): Texture {
+    override fun createTexture(resourceLocation: ResourceLocation, mipmaps: Boolean, format: TextureFormats, properties: Boolean, default: (mipmaps: Boolean) -> Texture): Texture {
         namedTextures[resourceLocation]?.let { return it }
 
         // load .mcmeta
@@ -189,7 +191,7 @@ class OpenGLTextureArray(
             for ((level, data) in texture.data.collect().withIndex()) {
                 val size = texture.size shr level
 
-                glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, 0, 0, renderData.index, size.x, size.y, 1, GL_RGBA, GL_UNSIGNED_BYTE, data)
+                glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, 0, 0, renderData.index, size.x, size.y, 1, texture.data.format.gl, GL_UNSIGNED_BYTE, data)
             }
 
             texture.data = TextureData.NULL

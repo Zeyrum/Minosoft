@@ -27,6 +27,7 @@ import de.bixilon.minosoft.gui.rendering.font.renderer.properties.FontProperties
 import de.bixilon.minosoft.gui.rendering.font.types.PostInitFontType
 import de.bixilon.minosoft.gui.rendering.font.types.empty.EmptyCodeRenderer
 import de.bixilon.minosoft.gui.rendering.font.types.factory.FontTypeFactory
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.texture.Texture
 import de.bixilon.minosoft.gui.rendering.textures.TextureUtil.texture
 import de.bixilon.minosoft.util.KUtil.toResourceLocation
@@ -73,7 +74,7 @@ class BitmapFontType(
 
         private fun load(file: ResourceLocation, height: Int, ascent: Int, chars: List<String>, context: RenderContext): BitmapFontType? {
             if (chars.isEmpty() || height <= 0) return null
-            val texture = context.textures.staticTextures.createTexture(file, mipmaps = false, properties = false)
+            val texture = context.textures.staticTextures.createTexture(file, mipmaps = false, format = TextureFormats.RGBA2, properties = false)
             texture.load(context) // force load it, we need to calculate the width of every char
 
             return load(texture, height, ascent, chars.codePoints())
@@ -82,7 +83,7 @@ class BitmapFontType(
         private fun ByteBuffer.scanLine(y: Int, width: Int, start: IntArray, end: IntArray) {
             for (index in 0 until (width * ROW)) {
                 val pixelIndex = ((ROW * width * y) + index)
-                val alpha = this[pixelIndex * 4 + 3].toInt() // index * rgba + a
+                val alpha = this[pixelIndex].toInt() and 0x03 // index * rgba + a
                 if (alpha == 0) {
                     // transparent
                     continue

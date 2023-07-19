@@ -15,6 +15,7 @@ package de.bixilon.minosoft.gui.rendering.system.base.texture.array
 
 import de.bixilon.kutil.latch.AbstractLatch
 import de.bixilon.minosoft.data.registries.identified.ResourceLocation
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.sprite.SpriteAnimator
 import de.bixilon.minosoft.gui.rendering.system.base.texture.texture.Texture
 import de.bixilon.minosoft.gui.rendering.system.base.texture.texture.file.PNGTexture
@@ -26,7 +27,7 @@ interface StaticTextureArray : TextureArray {
     fun get(resourceLocation: ResourceLocation): Texture?
 
     fun pushTexture(texture: Texture)
-    fun createTexture(resourceLocation: ResourceLocation, mipmaps: Boolean = true, properties: Boolean = true, default: (mipmaps: Boolean) -> Texture = { PNGTexture(resourceLocation, mipmaps = it) }): Texture
+    fun createTexture(resourceLocation: ResourceLocation, mipmaps: Boolean = true, format: TextureFormats = TextureFormats.RGBA8, properties: Boolean = true, default: (mipmaps: Boolean) -> Texture = { PNGTexture(resourceLocation, format = format, mipmaps = it) }): Texture
 
     fun preLoad(latch: AbstractLatch)
 }

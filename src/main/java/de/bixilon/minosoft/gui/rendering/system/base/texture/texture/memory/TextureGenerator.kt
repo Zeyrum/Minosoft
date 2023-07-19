@@ -14,12 +14,14 @@
 package de.bixilon.minosoft.gui.rendering.system.base.texture.texture.memory
 
 import de.bixilon.kotlinglm.vec2.Vec2i
-import de.matthiasmann.twl.utils.PNGDecoder
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import org.lwjgl.BufferUtils
 
 object TextureGenerator {
 
-    fun getBufferSize(size: Vec2i) = size.x * size.y * PNGDecoder.Format.RGBA.numComponents
+    fun getBufferSize(size: Vec2i, bytes: Int) = size.x * size.y * bytes
+    fun getBufferSize(size: Vec2i, format: TextureFormats) = getBufferSize(size, format.bytes)
 
-    fun allocate(size: Vec2i) = BufferUtils.createByteBuffer(getBufferSize(size))
+    fun allocate(size: Vec2i, bytes: Int) = BufferUtils.createByteBuffer(getBufferSize(size, bytes))
+    fun allocate(size: Vec2i, format: TextureFormats) = allocate(size, format.bytes)
 }

@@ -1,6 +1,6 @@
 /*
  * Minosoft
- * Copyright (C) 2020-2022 Moritz Zwerger
+ * Copyright (C) 2020-2023 Moritz Zwerger
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -32,5 +32,15 @@ object ColorUtil {
     fun Float.asGray(): Int {
         val color = (this * RGBColor.COLOR_FLOAT_DIVIDER).toInt()
         return color shl 16 or color shl 8 or color
+    }
+
+
+    fun rgba8ToRgba2(rgba8: Int): Byte {
+        val red = (rgba8 shr 24 + 6) and 0x03
+        val green = (rgba8 shr 16 + 6) and 0x03
+        val blue = (rgba8 shr 8 + 6) and 0x03
+        val alpha = (rgba8 shr 0 + 6) and 0x03
+
+        return ((red shl 6) or (green shl 4) or (blue shl 2) or alpha).toByte()
     }
 }

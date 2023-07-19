@@ -20,6 +20,7 @@ import de.bixilon.minosoft.gui.rendering.RenderContext
 import de.bixilon.minosoft.gui.rendering.font.renderer.code.CodePointRenderer
 import de.bixilon.minosoft.gui.rendering.font.renderer.properties.FontProperties
 import de.bixilon.minosoft.gui.rendering.font.types.unicode.UnicodeCodeRenderer
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureStates
 import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureTransparencies
 import de.bixilon.minosoft.gui.rendering.system.base.texture.array.TextureArrayProperties
@@ -39,7 +40,7 @@ class UnifontTexture(
 
     override lateinit var array: TextureArrayProperties
     override lateinit var renderData: TextureRenderData
-    override var data: TextureData = TextureData(size)
+    override var data: TextureData = TextureData(size, TextureFormats.RGBA2)
     override var properties = ImageProperties.DEFAULT
     override val state: TextureStates = TextureStates.LOADED
 
@@ -60,9 +61,9 @@ class UnifontTexture(
     }
 
     private fun TextureData.set(row: Int, offset: Int, x: Int, y: Int) {
-        val index = ((row * UnifontRasterizer.HEIGHT + y) * resolution + offset + x) * 4
+        val index = (row * UnifontRasterizer.HEIGHT + y) * resolution + offset + x
 
-        buffer.putInt(index, 0xFFFFFFFF.toInt())
+        buffer.put(index, 0xFF.toByte())
     }
 
     private fun rasterize(row: Int, offset: Int, start: Int, end: Int, dataWidth: Int, data: ByteArray): CodePointRenderer {

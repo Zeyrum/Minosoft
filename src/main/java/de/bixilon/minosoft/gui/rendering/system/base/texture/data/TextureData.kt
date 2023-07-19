@@ -14,15 +14,17 @@
 package de.bixilon.minosoft.gui.rendering.system.base.texture.data
 
 import de.bixilon.kotlinglm.vec2.Vec2i
+import de.bixilon.minosoft.gui.rendering.system.base.texture.TextureFormats
 import de.bixilon.minosoft.gui.rendering.system.base.texture.texture.memory.TextureGenerator
 import org.objenesis.ObjenesisStd
 import java.nio.ByteBuffer
 
 open class TextureData(
     val size: Vec2i,
-    val buffer: ByteBuffer = TextureGenerator.allocate(size),
+    val format: TextureFormats,
+    val buffer: ByteBuffer = TextureGenerator.allocate(size, format),
 ) {
-    constructor(size: Vec2i, array: ByteArray) : this(size, ByteBuffer.wrap(array))
+    constructor(size: Vec2i, format: TextureFormats, array: ByteArray) : this(size, format, ByteBuffer.wrap(array))
 
     open fun collect(): Array<ByteBuffer> = arrayOf(buffer)
 
